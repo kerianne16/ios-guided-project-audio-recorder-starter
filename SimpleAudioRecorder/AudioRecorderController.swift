@@ -51,8 +51,12 @@ class AudioRecorderController: UIViewController {
                                                                    weight: .regular)
         
         loadAudio()
+        updateViews()
     }
     
+    func updateViews() {
+        playButton.isSelected = isPlaying
+    }
     
     // MARK: - Timer
     
@@ -113,10 +117,12 @@ class AudioRecorderController: UIViewController {
     //step 4
     func play() {
         audioPlyer?.play()
+        updateViews()
     }
     //step 5
     func pause() {
         audioPlyer?.pause()
+        updateViews()
     }
     
     
