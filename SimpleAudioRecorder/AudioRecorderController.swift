@@ -7,15 +7,25 @@
 //
 
 import UIKit
+import AVFoundation // step 1
 
 class AudioRecorderController: UIViewController {
     
+    //MARK: Outlets
     @IBOutlet var playButton: UIButton!
     @IBOutlet var recordButton: UIButton!
     @IBOutlet var timeElapsedLabel: UILabel!
     @IBOutlet var timeRemainingLabel: UILabel!
     @IBOutlet var timeSlider: UISlider!
     @IBOutlet var audioVisualizer: AudioVisualizer!
+  
+    //MARK: Properties
+    
+    //step 2 create audio player
+    // We can only use DRM-free music (can't use Apple Music)
+    //Digital Rights Management- encrypted music
+    
+    var audioPlyer: AVAudioPlayer?
     
     private lazy var timeIntervalFormatter: DateComponentsFormatter = {
         // NOTE: DateComponentFormatter is good for minutes/hours/seconds
@@ -80,11 +90,17 @@ class AudioRecorderController: UIViewController {
     
     
     // MARK: - Playback
-    
-    func loadAudio() {
+    // step 6
+    var isPlaying: Bool {
+        audioPlyer?.isPlaying ?? false //single line method, you can omit the return. if it doesn't exist we return false
+    }
+
+
+    //step 3
+    func loadAudio() { //should be a guard let with error message in production
         let songURL = Bundle.main.url(forResource: "piano", withExtension: "mp3")!
         
-        
+        audioPlyer = try? AVAudioPlayer(contentsOf: songURL)// provide nil value is fails
     }
     
     /*
@@ -94,13 +110,13 @@ class AudioRecorderController: UIViewController {
         try session.setActive(true, options: []) // can fail if on a phone call, for instance
     }
     */
-    
+    //step 4
     func play() {
-        
+        audioPlyer?.play()
     }
-    
+    //step 5
     func pause() {
-        
+        audioPlyer?.pause()
     }
     
     
@@ -159,9 +175,14 @@ class AudioRecorderController: UIViewController {
     }
     
     // MARK: - Actions
-    
+   
+    //step 7
     @IBAction func togglePlayback(_ sender: Any) {
-        
+        if isPlaying {
+            pause()
+        } else {
+            play()
+        }
     }
     
     @IBAction func updateCurrentTime(_ sender: UISlider) {
